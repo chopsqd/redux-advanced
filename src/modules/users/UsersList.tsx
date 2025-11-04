@@ -1,65 +1,15 @@
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../store.ts";
 import {
-  type AppState,
-  createAppSelector,
-  useAppDispatch,
-  useAppSelector,
+  selectSelectedUser,
+  selectSortedUsers,
   type User,
   type UserSelectAction,
   type UserUnselectAction
-} from "./store.ts";
-
-/*
-  RESELECT - мемоизация на основе входов
-  Reselect кеширует результат и пересчитывает только при изменении входов
-
-  Первые аргументы: input selectors (берут данные из state или props)
-  → Они извлекают «сырые» значения: ids, entities, sort
-
-  Последний аргумент: результатирующая функция (ids, entities, sort) => { ... }
-  → Выполняется только если изменился хотя бы один из входов
-
-  Если ids, entities и sort не изменились => сортировка не запускается
-  Даже если весь store обновился, но эти три значения — те же ссылки/значения,
-  то компонент не получит новый массив и не перерисуется
-*/
-const selectSortedUsers = createAppSelector(
-  (state: AppState) => state.users.ids,
-  (state: AppState) => state.users.entities,
-  (_: AppState, sort: "asc" | "desc") => sort,
-  (ids, entities, sort) => ids
-    .map((id) => entities[id])
-    .sort((a, b) => {
-      if (sort === "asc") {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    })
-);
-
-const selectSelectedUser = (state: AppState) =>
-  state.users.selectedUserId
-    ? state.users.entities[state.users.selectedUserId]
-    : undefined;
+} from "./users.slice.ts";
 
 export const UsersList = () => {
   const [sortType, setSortType] = useState<"asc" | "desc">("asc");
-
-  // const ids = useAppSelector(state => state.users.ids);
-  // const entities = useAppSelector(state => state.users.entities);
-  // const selectedUserId = useAppSelector(state => state.users.selectedUserId);
-  // const selectedUser = selectedUserId ? entities[selectedUserId] : undefined;
-  // const sortedUsers = useMemo(
-  //   () => ids
-  //     .map((id) => entities[id])
-  //     .sort((a, b) => {
-  //       if (sortType === "asc") {
-  //         return a.name.localeCompare(b.name);
-  //       } else {
-  //         return b.name.localeCompare(a.name);
-  //       }
-  //     }), [ids, entities, sortType]);
 
   const sortedUsers = useAppSelector(
     state => selectSortedUsers(state, sortType)
