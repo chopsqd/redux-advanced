@@ -1,21 +1,15 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store.ts";
-import {
-  selectSelectedUser,
-  selectSortedUsers,
-  type User,
-  type UserSelectAction,
-  type UserUnselectAction
-} from "./users.slice.ts";
+import { type User, usersSlice } from "./users.slice.ts";
 
 export const UsersList = () => {
   const [sortType, setSortType] = useState<"asc" | "desc">("asc");
 
   const sortedUsers = useAppSelector(
-    state => selectSortedUsers(state, sortType)
+    state => usersSlice.selectors.selectSortedUsers(state, sortType)
   );
 
-  const selectedUser = useAppSelector(selectSelectedUser);
+  const selectedUser = useAppSelector(usersSlice.selectors.selectSelectedUserId);
 
   return (
     <div className="flex flex-col items-center">
@@ -52,10 +46,7 @@ function UserListItem({ user }: { user: User }) {
   const dispatch = useAppDispatch();
 
   const handleUserClick = () => {
-    dispatch({
-      type: "userSelect",
-      payload: { userId: user.id }
-    } satisfies UserSelectAction);
+    dispatch(usersSlice.actions.select({ userId: user.id }));
   };
 
   return (
@@ -69,9 +60,7 @@ function SelectedUser({ user }: { user: User }) {
   const dispatch = useAppDispatch();
 
   const handleBackButtonClick = () => {
-    dispatch({
-      type: "userUnselect"
-    } satisfies UserUnselectAction);
+    dispatch(usersSlice.actions.unselect());
   };
 
   return (

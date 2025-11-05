@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../store.ts";
-import { type CounterId, type DecrementAction, type IncrementAction, selectCounter } from "./counters.slice.ts";
+import { type CounterId, decrementAction, incrementAction, selectCounter } from "./counters.slice.ts";
+import { bindActionCreators } from "@reduxjs/toolkit";
 
 export const Counters = () => {
   return (
@@ -16,19 +17,27 @@ function Counter({ counterId }: { counterId: CounterId }) {
     state => selectCounter(state, counterId)
   );
 
+  const actions = bindActionCreators(
+    {
+      incrementAction,
+      decrementAction
+    },
+    dispatch
+  );
+
   return (
     <div>
       {/*<h1>Counter: {store.getState().counters[counterId]?.counter}</h1>*/}
       <h1 className={"text-2xl font-bold text-center"}>Counter: {counterState?.counter}</h1>
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => dispatch({ type: "increment", payload: { counterId } } satisfies IncrementAction)}
+        onClick={() => actions.incrementAction({ counterId })}
       >
         Increment
       </button>
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => dispatch({ type: "decrement", payload: { counterId } } satisfies DecrementAction)}
+        onClick={() => actions.decrementAction({ counterId })}
       >
         Decrement
       </button>
