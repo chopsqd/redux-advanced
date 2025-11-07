@@ -28,15 +28,6 @@ export const countersReducer = createReducer(initialCountersState, (builder) => 
 
     // Обновление с помощью immer
     state[counterId].counter++
-
-    // Ручное иммутабельное обновление
-    // return {
-    //   ...state,
-    //   [counterId]: {
-    //     ...currentCounter,
-    //     counter: currentCounter.counter + 1
-    //   }
-    // };
   });
   builder.addCase(decrementAction, (state, action) => {
     const { counterId } = action.payload;
@@ -47,50 +38,7 @@ export const countersReducer = createReducer(initialCountersState, (builder) => 
 
     // Обновление с помощью immer
     state[counterId].counter--
-
-    // Ручное иммутабельное обновление
-    // return {
-    //   ...state,
-    //   [counterId]: {
-    //     ...currentCounter,
-    //     counter: currentCounter.counter - 1
-    //   }
-    // };
   });
 });
-
-// export const countersReducer = (state: CountersState = initialCountersState, action: Action): CountersState => {
-//   switch (action.type) {
-//     case "increment": {
-//       const { counterId } = action.payload;
-//       const currentCounter = state[counterId] ?? initialCounterState;
-//
-//       // Иммутабельное обновление
-//       return {
-//         ...state,
-//         [counterId]: {
-//           ...currentCounter,
-//           counter: currentCounter.counter + 1
-//         }
-//       };
-//     }
-//     case "decrement": {
-//       const { counterId } = action.payload;
-//       const currentCounter = state[counterId] ?? initialCounterState;
-//
-//       // Иммутабельное обновление
-//       return {
-//         ...state,
-//         [counterId]: {
-//           ...currentCounter,
-//           counter: currentCounter.counter - 1
-//         }
-//
-//       };
-//     }
-//     default:
-//       return state;
-//   }
-// };
 
 export const selectCounter = (state: AppState, counterId: CounterId) => state.counters[counterId];

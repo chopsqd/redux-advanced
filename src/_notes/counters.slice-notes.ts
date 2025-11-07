@@ -1,4 +1,4 @@
-import type { AppState } from "../../store.ts";
+import type { AppState } from "../store.ts";
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
 export type CounterId = string
@@ -29,6 +29,9 @@ export const countersReducer = createReducer(initialCountersState, (builder) => 
     // Обновление с помощью immer
     state[counterId].counter++
 
+    // Immer - это библиотека, которая позволяет писать "мутирующий" код,
+    // но на самом деле создаёт новое иммутабельное состояние
+
     // Ручное иммутабельное обновление
     // return {
     //   ...state,
@@ -47,6 +50,9 @@ export const countersReducer = createReducer(initialCountersState, (builder) => 
 
     // Обновление с помощью immer
     state[counterId].counter--
+
+    // Immer - это библиотека, которая позволяет писать "мутирующий" код,
+    // но на самом деле создаёт новое иммутабельное состояние
 
     // Ручное иммутабельное обновление
     // return {
